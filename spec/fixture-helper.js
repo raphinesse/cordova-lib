@@ -50,9 +50,6 @@ module.exports = function fixtureHelper (tmpDir) {
 
             // Create the app folder and return its path
             return PlatformApi.createPlatform(appPath, config, null, events)
-                // Make our node_modules accessible from the app dir to make
-                // platform modules work when they are required from the app dir.
-                .then(_ => linkToGlobalModulesFrom(appPath))
                 .then(_ => appPath);
         },
 
@@ -92,6 +89,15 @@ module.exports = function fixtureHelper (tmpDir) {
             async copyTo (targetPath) {
                 const fixturePath = await fixturePromises[name];
                 fs.copySync(fixturePath, targetPath);
+
+                // BEGIN DIRTY HACK, REMOVE ASAP
+                // Make our node_modules accessible from the app dir to make
+                // platform modules work when they are required from the app dir.
+                if (name === 'androidApp') {
+                    linkToGlobalModulesFrom(path.join(targetPath, '..'));
+                }
+                // END DIRTY HACK
+
                 return targetPath;
             }
         };
@@ -99,7 +105,7 @@ module.exports = function fixtureHelper (tmpDir) {
 };
 
 function linkToGlobalModulesFrom (dir) {
-    return fs.symlink(
+    fs.ensureSymlinkSync(
         path.join(__dirname, '../node_modules'),
         path.join(dir, 'node_modules'),
         'junction'
