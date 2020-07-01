@@ -142,7 +142,7 @@ describe('util module', function () {
             const linkedPluginPath = path.join(temp, 'linked-plugin');
             const pluginLinkPath = path.join(pluginsDir, 'plugin-link');
             fs.ensureDirSync(linkedPluginPath);
-            fs.ensureSymlinkSync(linkedPluginPath, pluginLinkPath);
+            fs.ensureSymlinkSync(linkedPluginPath, pluginLinkPath, 'junction');
             expectFindPluginsToReturn(plugins.concat('plugin-link'));
         });
 

@@ -51,7 +51,7 @@ describe('platforms/platforms', () => {
             isCordova = spyOn(util, 'isCordova').and.returnValue(CORDOVA_ROOT);
 
             fs.removeSync(PLATFORM_SYMLINK);
-            fs.ensureSymlinkSync(PLATFORM_WITH_API, PLATFORM_SYMLINK);
+            fs.ensureSymlinkSync(PLATFORM_WITH_API, PLATFORM_SYMLINK, 'junction');
         });
 
         it('should return PlatformApi class defined by platform', function () {
